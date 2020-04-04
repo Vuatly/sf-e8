@@ -1,0 +1,62 @@
+version: '3'
+services:
+  app:
+    build: .
+    command: python app.py
+    ports:
+    - "5000:5000"
+    depends_on:
+      - db
+      - celery
+      - consumer
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile-consumer
+    command: python consumer.py
+    depends_on:
+      - nsqd
+
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: Dockerfile-celery
+    depends_on:
+      - redis
+
+  db:
+    container_name: db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: aezakmi
+
+  redis:
+    container_name: e8-redis
+    ports:
+    - "6379:6379"
+    image: redis
+
+  nsqlookupd:
+    image: nsqio/nsq
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+  nsqd:
+    container_name: nsqd
+    image: nsqio/nsq
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+  nsqadmin:
+    image: nsqio/nsq
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    ports:
+      - "4171:4171"

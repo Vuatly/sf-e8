@@ -1,0 +1,20 @@
+{% extends 'base.html' %} {% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Адресс</th>
+      <th scope="col">Количество слов</th>
+      <th scope="col">Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for res in results %}
+    <tr>
+      <td class="c1">{{res.address}}</td>
+      <td class="c1">{{res.words_count}}</td>
+      <td class="c4"><span>{{res.http_status_code}}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

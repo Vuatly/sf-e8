@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<h3>Подсчет слов python на сайте.</h3>
+<form method="POST" action="">
+  {{ form.csrf_token }}
+  <div class="form-field">
+    {{ form.address(size=100)}}
+  </div>
+  <input type="submit" value="Поиск" />
+  {{ form.submit }}
+</form>
+
+{% endblock content %}
